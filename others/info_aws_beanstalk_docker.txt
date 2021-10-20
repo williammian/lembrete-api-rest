@@ -1,0 +1,56 @@
+Criar imagem docker
+
+docker build -t "williammian/lembrete-api:v1-prod" .
+
+-----------------------------------------------------------
+
+Enviar imagem para o Docker Hub
+
+docker login
+
+username
+password
+
+docker push williammian/lembrete-api:v1-prod
+
+-----------------------------------------------------------
+
+Criar arquivo Dockerrun.aws.json
+
+{
+  "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "williammian/lembrete-api:v1-prod",
+      "Update": "true"
+    },
+   "Ports": [
+     {
+       "hostPort": 80,
+       "ContainerPort": 8081
+     }
+   ]
+}
+
+---------------------------------------------------------
+
+Criar ambiente no Elastic Beanstalk
+
+lembrete-api-docker
+
+Docker
+
+Subir arquivo Dockerrun.aws.json
+
+Em Configuração > Software
+Colocar as propriedades de ambiente
+LEMBRETES_DATABASE_URL (url do banco de dados no RDS)
+LEMBRETES_DATABASE_USERNAME
+LEMBRETES_DATABASE_PASSWORD
+
+----------------------------------------------------------
+
+Teste browser
+
+http://lembreteapidockeraws-env.eba-cjk4erib.us-east-1.elasticbeanstalk.com/api/lembretes
+
+----------------------------------------------------------

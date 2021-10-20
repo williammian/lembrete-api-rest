@@ -1,0 +1,35 @@
+Criar banco de dados no RDS
+
+nome do bd: lembretes
+username: postgres
+password: postgres
+
+Liberar porta 5432 como regra de entrada no Security Group do RDS
+
+Não deixar acesso público
+
+-----------------------------------------------------------
+
+Criar ambiente no Elastic Beanstalk
+
+lembrete-api
+
+Java
+
+Subir arquivo .jar (lembrete-api-0.0.1-SNAPSHOT.jar)
+
+Liberar porta 8081 como regra de entrada no Security Group da EC2 da api
+
+Em Configuração > Software
+Colocar as propriedades de ambiente
+LEMBRETES_DATABASE_URL (url do banco de dados no RDS)
+LEMBRETES_DATABASE_USERNAME
+LEMBRETES_DATABASE_PASSWORD
+
+-----------------------------------------------------------
+
+Teste browser
+
+http://lembreteapidocker-env.eba-cjm6erib.us-east-1.elasticbeanstalk.com:8081/api/lembretes
+
+-----------------------------------------------------------

@@ -1,0 +1,76 @@
+Criar arquivo Dockerfile na raiz do projeto
+com o seguinte conteúdo
+
+-------------------------------------------------------------------------
+
+FROM openjdk:8-jdk-alpine
+COPY target/lembrete-api-*.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+-------------------------------------------------------------------------
+
+Criar a imagem baseada no Dockerfile
+
+docker build -t "lembrete-api:v1-prod" .
+
+--------------------------------------------------------------------------
+
+Rodar container docker lembrete-api conectando em banco de dados postgre (que não roda em docker) passando variáveis de ambiente
+
+docker run -p 8081:8081 -e LEMBRETES_DATABASE_USERNAME=postgres -e LEMBRETES_DATABASE_PASSWORD=postgres -e LEMBRETES_DATABASE_URL=jdbc:postgresql://192.168.15.21:5432/lembretes lembrete-api:v1-prod
+
+--------------------------------------------------------------------------
+
+Criar arquivo docker-compose.yml (na raiz do projeto) para subir api juntamente com postgre em ambientes conteinerizados
+
+version: '3.0'
+services:
+  
+  db:
+    container_name: lembrete-postgres
+    image: postgres:10.5-alpine
+    environment:
+       - POSTGRES_PASSWORD=postgres
+       - POSTGRES_USER=postgres
+       - POSTGRES_DB=lembretes
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+       - 5432:5432
+    networks:
+       - lembrete-network
+
+  api:
+    image: lembrete-api:v1-prod
+    ports:
+        - 8081:8081
+    environment:
+        - LEMBRETES_DATABASE_URL=jdbc:postgresql://lembrete-postgres:5432/lembretes
+        - LEMBRETES_DATABASE_USERNAME=postgres
+        - LEMBRETES_DATABASE_PASSWORD=postgres
+    depends_on:
+        db:
+          condition: service_healthy
+    networks:
+        - lembrete-network
+
+networks:
+  lembrete-network: 
+    driver: bridge
+    
+------------------------------------------------------------------------------------------
+
+Subindo containers localmente
+
+docker compose up
+
+-------------------------------------------------------------------------------------------
+
+Teste browser
+
+http://localhost:8081/api/lembretes
+
+--------------------------------------------------------------------------------------------

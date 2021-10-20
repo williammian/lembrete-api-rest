@@ -1,0 +1,28 @@
+Gerar jar executável do projeto back-end
+
+Entrar na pasta raiz do projeto
+
+Executar o seguinte comando:
+mvn package
+
+Entrar na pasta target
+Executar: 
+
+(producao)
+java -jar -DLEMBRETES_DATABASE_URL=jdbc:postgresql://localhost:5432/lembretes -DLEMBRETES_DATABASE_USERNAME=postgres -DLEMBRETES_DATABASE_PASSWORD=postgres lembrete-api-0.0.1-SNAPSHOT.jar
+
+-----------------------------------------------------------
+
+Criar banco de dados no postgre
+
+nome do bd: lembretes
+username: postgres
+password: postgres
+
+------------------------------------------------------------
+
+Teste browser
+
+http://localhost:8081/api/lembretes
+
+-------------------------------------------------------------
