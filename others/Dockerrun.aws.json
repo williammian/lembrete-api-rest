@@ -4,6 +4,24 @@
     {
       "name": "lembrete-api",
       "image": "williammian/lembrete-api:v3-prod",
+      "environment": [
+        {
+          "name": "LEMBRETES_DATABASE_URL",
+          "value": "jdbc:postgresql://rds-endpoint:5432/lembretes"
+        },
+        {
+          "name": "LEMBRETES_DATABASE_USERNAME",
+          "value": "postgres"
+        },
+        {
+          "name": "LEMBRETES_DATABASE_PASSWORD",
+          "value": "postgres"
+        },
+        {
+          "name": "LEMBRETES_SERVER_PORT",
+          "value": "8082"
+        }
+      ],
       "essential": true,
       "memory": 128,
       "portMappings": [
@@ -11,6 +29,27 @@
           "hostPort": 8082,
           "containerPort": 8082
         }    
+      ]
+    },
+    {
+      "name": "lembrete-app",
+      "image": "williammian/lembrete-app:v2-prod",
+      "environment": [
+        {
+          "name": "LEMBRETES_API_URL",
+          "value": "http://ip-api:8082/api"
+        }
+      ],
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }    
+      ],
+      "links": [
+        "lembrete-api"
       ]
     }
   ]
