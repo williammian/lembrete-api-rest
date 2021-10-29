@@ -1,0 +1,17 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "containerDefinitions": [
+    {
+      "name": "lembrete-api",
+      "image": "williammian/lembrete-api:v3-prod",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 8082,
+          "containerPort": 8082
+        }    
+      ]
+    }
+  ]
+}

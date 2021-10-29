@@ -31,23 +31,48 @@ Criar arquivo Dockerrun.aws.json
    ]
 }
 
----------------------------------------------------------
+-----------------
+
+Sempre a primeira porta da lista será mapeada para a porta 80 da máquina host e a restante será mapeada para o hostPort
 
 {
-    "AWSEBDockerrunVersion": "3",
-    "containerDefinitions": [
+  "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "williammian/lembrete-api:v2-prod",
+      "Update": "true"
+    },
+   "Ports": [
+     {
+       "ContainerPort": 8080,
+       "HostPort": 80
+     },
+     {
+       "ContainerPort": 8082,
+       "HostPort": 8082
+     }
+   ]
+}
+
+---------------------------------------------------------
+
+Multi-container Docker running on 64bit Amazon Linux
+
+{
+  "AWSEBDockerrunVersion": "2",
+  "containerDefinitions": [
+    {
+      "name": "lembrete-api",
+      "image": "williammian/lembrete-api:v3-prod",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
         {
-            "name": "lembrete-api",
-            "image": "williammian/lembrete-api:v3-prod",
-            "essential": true,
-            "portMappings": [
-                {
-                    "hostPort": 8082,
-                    "containerPort": 8082
-                }
-            ]
-        }
-    ]
+          "hostPort": 8082,
+          "containerPort": 8082
+        }    
+      ]
+    }
+  ]
 }
 
 ---------------------------------------------------------
