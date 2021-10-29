@@ -5,32 +5,46 @@ services:
     container_name: lembrete-postgres
     image: postgres:10.5-alpine
     environment:
-       - POSTGRES_PASSWORD=postgres
-       - POSTGRES_USER=postgres
-       - POSTGRES_DB=lembretes
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=lembretes
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-       - 5432:5432
+      - 5432:5432
     networks:
-       - lembrete-network
+      - lembrete-network
 
   api:
-    image: lembrete-api:v1-prod
+    container_name: lembrete-api
+    image: lembrete-api:v2-prod
     ports:
-        - 8081:8081
+      - 8082:8082
     environment:
-        - LEMBRETES_DATABASE_URL=jdbc:postgresql://lembrete-postgres:5432/lembretes
-        - LEMBRETES_DATABASE_USERNAME=postgres
-        - LEMBRETES_DATABASE_PASSWORD=postgres
+      - LEMBRETES_DATABASE_URL=jdbc:postgresql://lembrete-postgres:5432/lembretes
+      - LEMBRETES_DATABASE_USERNAME=postgres
+      - LEMBRETES_DATABASE_PASSWORD=postgres
+      - LEMBRETES_SERVER_PORT=8082
     depends_on:
-        db:
-          condition: service_healthy
+      db:
+        condition: service_healthy
     networks:
-        - lembrete-network
+      - lembrete-network
+
+  app:
+    container_name: lembrete-app
+    image: lembrete-app:v2-prod
+    ports:
+      - 80:80
+    environment:
+      - LEMBRETES_API_URL=http://localhost:8082/api
+    depends_on:
+      - api
+    networks:
+      - lembrete-network
 
 networks:
   lembrete-network: 

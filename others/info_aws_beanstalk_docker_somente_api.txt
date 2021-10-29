@@ -1,6 +1,6 @@
 Criar imagem docker
 
-docker build -t "williammian/lembrete-api:v1-prod" .
+docker build -t "williammian/lembrete-api:v2-prod" .
 
 -----------------------------------------------------------
 
@@ -11,7 +11,7 @@ docker login
 username
 password
 
-docker push williammian/lembrete-api:v1-prod
+docker push williammian/lembrete-api:v2-prod
 
 -----------------------------------------------------------
 
@@ -20,15 +20,34 @@ Criar arquivo Dockerrun.aws.json
 {
   "AWSEBDockerrunVersion": "1",
     "Image": {
-      "Name": "williammian/lembrete-api:v1-prod",
+      "Name": "williammian/lembrete-api:v2-prod",
       "Update": "true"
     },
    "Ports": [
      {
-       "hostPort": 80,
-       "ContainerPort": 8081
+       "ContainerPort": 8082,
+       "HostPort": 80
      }
    ]
+}
+
+---------------------------------------------------------
+
+{
+    "AWSEBDockerrunVersion": "3",
+    "containerDefinitions": [
+        {
+            "name": "lembrete-api",
+            "image": "williammian/lembrete-api:v3-prod",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 8082,
+                    "containerPort": 8082
+                }
+            ]
+        }
+    ]
 }
 
 ---------------------------------------------------------
@@ -46,11 +65,14 @@ Colocar as propriedades de ambiente
 LEMBRETES_DATABASE_URL (url do banco de dados no RDS)
 LEMBRETES_DATABASE_USERNAME
 LEMBRETES_DATABASE_PASSWORD
+LEMBRETES_SERVER_PORT=8082
+
+Liberar porta 8082 como regra de entrada no Security Group da EC2 da api
 
 ----------------------------------------------------------
 
 Teste browser
 
-http://lembreteapidockeraws-env.eba-cjk4erib.us-east-1.elasticbeanstalk.com/api/lembretes
+http://lembreteapidockeraws-env.eba-cjk4erib.us-east-1.elasticbeanstalk.com:8082/api/lembretes
 
 ----------------------------------------------------------

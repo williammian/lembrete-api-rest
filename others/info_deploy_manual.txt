@@ -9,7 +9,7 @@ Entrar na pasta target
 Executar: 
 
 (producao)
-java -jar -DLEMBRETES_DATABASE_URL=jdbc:postgresql://localhost:5432/lembretes -DLEMBRETES_DATABASE_USERNAME=postgres -DLEMBRETES_DATABASE_PASSWORD=postgres lembrete-api-0.0.1-SNAPSHOT.jar
+java -jar -DLEMBRETES_DATABASE_URL=jdbc:postgresql://localhost:5432/lembretes -DLEMBRETES_DATABASE_USERNAME=postgres -DLEMBRETES_DATABASE_PASSWORD=postgres -DLEMBRETES_SERVER_PORT=8082 lembrete-api-0.0.1-SNAPSHOT.jar
 
 -----------------------------------------------------------
 
@@ -23,6 +23,6 @@ password: postgres
 
 Teste browser
 
-http://localhost:8081/api/lembretes
+http://localhost:8082/api/lembretes
 
 -------------------------------------------------------------
