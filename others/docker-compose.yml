@@ -1,0 +1,31 @@
+version: '3.0'
+services:
+  
+  api:
+    container_name: lembrete-api
+    image: williammian/lembrete-api:v2-prod
+    ports:
+      - 8082:8082
+    environment:
+      - LEMBRETES_DATABASE_URL=jdbc:postgresql://rds-endpoint:5432/lembretes
+      - LEMBRETES_DATABASE_USERNAME=postgres
+      - LEMBRETES_DATABASE_PASSWORD=postgres
+      - LEMBRETES_SERVER_PORT=8082
+    networks:
+      - lembrete-network
+
+  app:
+    container_name: lembrete-app
+    image: williammian/lembrete-app:v2-prod
+    ports:
+      - 80:80
+    environment:
+      - LEMBRETES_API_URL=http://ip-instancia-ec2:8082/api
+    depends_on:
+      - api
+    networks:
+      - lembrete-network
+
+networks:
+  lembrete-network: 
+    driver: bridge
