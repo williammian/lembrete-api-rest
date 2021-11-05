@@ -1,0 +1,5 @@
+Copiando/transferindo arquivo de host local para host remoto
+
+scp -i (path of your key) (path for your file to be transferred) (username@ip):(path where file to be copied)
+
+scp -i aws.pem nome_arquivo_a_ser_copiado.txt ec2-user@someipAddress:/home/ec2-user/
